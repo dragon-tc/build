@@ -25,7 +25,7 @@
 cd ../ && export TOOLCHAIN_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
 # Define specifications of remote repositories.
-export REMOTE_URL="https://github.com/dragon-tc-tmp"
+export REMOTE_URL="https://github.com/dragon-tc"
 export BRANCH="release_60"
 $TOOLCHAIN_ROOT/build/common sync;
 
