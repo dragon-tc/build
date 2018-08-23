@@ -77,8 +77,7 @@ clean() {
 }
 
 finalize() {
-  # Copy toolchain makefiles
-  cp $TOOLCHAIN_ROOT/build/makefiles/DragonTC-$DTC_VERSION.mk $PREFIX_PATH/DragonTC.mk;
+  # Add VERSION file
   current_date=$(date "+%Y%m%d");
   echo "$DTC_VERSION-DragonTC-$current_date" >> $PREFIX_PATH/VERSION;
 
