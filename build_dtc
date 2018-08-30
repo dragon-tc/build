@@ -40,7 +40,7 @@ setup_dtc_build() {
   export TOOLCHAIN_ROOT="$(dirname "$(pwd)")"
 
   # Set remote url and sync
-  export REMOTE_URL="https://github.com/dragon-tc-tmp"
+  export REMOTE_URL="https://github.com/dragon-tc"
   $TOOLCHAIN_ROOT/build/bin/common sync;
 
   # Clean tree
