@@ -1,0 +1,118 @@
+#!/usr/bin/env sh
+# Copyright (C) 2018 Joe Maples <joe@frap129.org>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Wrapper Settings
+CLANG_VERSION=$(grep "ClangDefaultVersion" build/soong/cc/config/global.go -m1)
+CLANG_BIN="prebuilt/clang/host/linux-x86/${CLANG_VERSION:29:13}/bin"
+DTC_BIN="prebuilt/clang/host/linux-x86/$LLVM_PREBUILTS_VERSION/bin"
+
+# Flags
+FILTER_FLAGS=""
+GLOBAL_FLAGS=""
+OPT_FLAGS=""
+POLLY_FLAGS=""
+
+# Module blacklists
+# Separate module names with spaces
+DTC_SKIP_MODULES=""
+OPT_SKIP_MODULES=""
+POLLY_SKIP_MODULES=""
+
+# Get passed args and separate second to last arg
+args="$@"
+flags="" # Create global flags var
+file="${*: -2:1}" # hack to get second to last argument
+
+# If file contain a C/C++ extension, assume we're compiling
+# Currently not used
+compiling() {
+    if [[ "${file##*.}" = *"c"* ]]; then
+        return 0;
+    fi
+    return 1;
+}
+
+# Set our flags
+setDragonTCFlags() {
+    #Set global flags
+    flags="$GLOBAL_FLAGS"
+
+    # Set Opt flags
+    if useOpt; then
+       flags="$OPT_FLAGS"
+    fi
+    # Set Polly flags
+    if usePolly; then
+       flags="$flags $POLLY_FLAGS"
+    fi
+}
+
+# Filter incompatible flags
+filterFlags() {
+    if [ -n "$FILTER_FLAGS" ]; then
+        for filter in $FILTER_FLAGS; do
+            args="${args//$filter/}"
+        done;
+    fi
+}
+
+# Only compile with Dragon TC if module is not blacklisted
+useDTC() {
+    if [ -n "$DTC_SKIP_MODULES" ]; then
+        for skip in $DTC_SKIP_MODULES; do
+            if [[ "$file" = *"$skip"* ]]; then
+                return 1
+            fi
+        done;
+    fi
+    return 0;
+}
+
+# Only use Opt flags if module is not blacklisted
+useOpt() {
+    if [ -n "$OPT_SKIP_MODULES" ]; then
+        for skip in $OPT_SKIP_MODULES; do
+            if [[ "$file" = *"$skip"* ]]; then
+                return 1
+            fi
+        done;
+    fi
+    return 0;
+}
+
+# Only use Opt flags if file is not blacklisted
+usePolly() {
+    if [ -n "$POLLY_SKIP_MODULES" ]; then
+        for skip in $POLLY_SKIP_MODULES; do
+            if [[ "$file" = *"$skip"* ]]; then
+                return 1
+            fi
+        done;
+    fi
+    return 0;
+}
+
+# Check if the module supports Dragon TC
+if useDTC; then
+    # Prepare flags
+    setDragonTCFlags
+    filterFlags
+
+    # Pass arguments to the real Dragon TC
+    $DTC_BIN/$(basename $0) $args $flags
+else
+    # Compile with AOSP default clang
+    $CLANG_BIN/$(basename $0) $args
+fi

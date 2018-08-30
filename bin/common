@@ -96,6 +96,15 @@ finalize() {
   whereami=$PWD
   $TOOLCHAIN_ROOT/build/bin/cleanbinaries $whereami $PREFIX_PATH
   $TOOLCHAIN_ROOT/build/bin/stripbinaries $whereami $PREFIX_PATH $DTC_VERSION
+
+  # Add Wrapper
+  mv $TOOLCHAIN_ROOT/out/$DTC_VERSION/bin/clang $TOOLCHAIN_ROOT/out/$DTC_VERSION/bin/clang.real
+  cp $TOOLCHAIN_ROOT/build/bin/dtc-wrapper $TOOLCHAIN_ROOT/out/$DTC_VERSION/bin/clang
+  mv $TOOLCHAIN_ROOT/out/$DTC_VERSION/bin/clang++ $TOOLCHAIN_ROOT/out/$DTC_VERSION/bin/clang++.real
+  cp $TOOLCHAIN_ROOT/build/bin/dtc-wrapper $TOOLCHAIN_ROOT/out/$DTC_VERSION/bin/clang++
+
+  # Create vendorsetup
+  echo "export LLVM_PREBUILTS_VERSION=$DTC_VERSION" > $TOOLCHAIN_ROOT/out/$DTC_VERSION/vendorsetup.sh
 }
 
 
