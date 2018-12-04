@@ -89,6 +89,8 @@ finalize() {
   cp -R $TOOLCHAIN_ROOT/build/aosp_prebuilts/test $PREFIX_PATH/test;
   # Copy libfuzzer headers
   cp -R $TOOLCHAIN_ROOT/build/aosp_prebuilts/runtimes_ndk_cxx $PREFIX_PATH/runtimes_ndk_cxx;
+  # Remove unneeded static libs
+  rm $PREFIX_PATH/lib64/**.a
 
   cd $TOOLCHAIN_ROOT/out/$DTC_VERSION/lib64/clang; ln -s $DTC_LIB_VERSION $DTC_VERSION; cd $TOOLCHAIN_ROOT/build
 
