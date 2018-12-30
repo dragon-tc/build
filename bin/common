@@ -83,15 +83,14 @@ finalize() {
 
   # Copy AOSP prebuilt files
   cp -R $TOOLCHAIN_ROOT/build/aosp_prebuilts/libclang/** $PREFIX_PATH/lib64/clang/$DTC_LIB_VERSION/lib/linux/;
-  # Copy stdatomic from bionic
-  cp $TOOLCHAIN_ROOT/build/aosp_prebuilts/stdatomic.h $PREFIX_PATH/lib64/clang/$DTC_LIB_VERSION/include/stdatomic.h;
-  cd $TOOLCHAIN_ROOT/out/$DTC_VERSION/lib64/clang; ln -s $DTC_LIB_VERSION $DTC_VERSION; cd $TOOLCHAIN_ROOT/build
-
   # Copy libfuzzer headers
   cp -R $TOOLCHAIN_ROOT/build/aosp_prebuilts/prebuilt_include $PREFIX_PATH/prebuilt_include;
-
   # Copy Android tests
   cp -R $TOOLCHAIN_ROOT/build/aosp_prebuilts/test $PREFIX_PATH/test;
+  # Copy libfuzzer headers
+  cp -R $TOOLCHAIN_ROOT/build/aosp_prebuilts/runtimes_ndk_cxx $PREFIX_PATH/runtimes_ndk_cxx;
+
+  cd $TOOLCHAIN_ROOT/out/$DTC_VERSION/lib64/clang; ln -s $DTC_LIB_VERSION $DTC_VERSION; cd $TOOLCHAIN_ROOT/build
 
   whereami=$PWD
   $TOOLCHAIN_ROOT/build/bin/cleanbinaries $whereami $PREFIX_PATH
