@@ -8,7 +8,6 @@ clang-apply-replacements
 clang-change-namespace
 clang-cl
 clang-cpp
-clang-func-mapping
 clang-import-test
 clang-include-fixer
 clang-offload-bundler
@@ -40,7 +39,6 @@ llvm-lto2
 llvm-mc
 llvm-mca
 llvm-mt
-llvm-objdump
 llvm-opt-report
 llvm-pdbutil
 llvm-ranlib
