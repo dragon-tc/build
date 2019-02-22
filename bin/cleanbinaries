@@ -22,7 +22,6 @@ llc
 lli
 llvm-bcanalyzer
 llvm-cat
-llvm-cfi-verify
 llvm-c-test
 llvm-cvtres
 llvm-cxxdump
